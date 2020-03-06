@@ -1,17 +1,183 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="page-content">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <div>{{userService.currentDate}}</div>
+
+
+    
+    
+    
+    <div *ngIf="mode === 'listHouses'">
+      <div (click)="gotoHouse( house )" class="house-section" *ngFor="let house of userService.houses">
+        <div class="name"><ion-icon name="home"></ion-icon> {{house.name}}</div>
+        <div class="address">{{house.address}}</div>
+        <div class="tenant" *ngIf="house.tenants">Tenants: {{house.tenants.length}}</div>
+        <div class="tenant">Total Rent: {{house.rent|currency}}</div>
+      </div>
+      <button class="primary" (click)="gotoCreateHouse()">Create</button>
+    </div>
+
+
+    <div *ngIf="mode === 'showHouse'">
+      <div class="house-section">
+        
+        <div class="name"><ion-icon name="home"></ion-icon> {{currentHouse.name}}</div>
+        <div class="address">{{currentHouse.address}}</div>
+        <div class="tenant" *ngIf="currentHouse.tenants">Tenants: {{currentHouse.tenants.length}}</div>
+        <div class="tenant">Total Rent: {{currentHouse.rent|currency}}</div>
+        <div class="flow-root">
+          <button class="float-right green small" (click)="gotoEditHouse()"> <ion-icon name="create-outline"></ion-icon> Edit House</button>
+        </div>
+      </div>
+
+      <div class="tenant-list">
+        <div class="tenant-title"><div class="text">Tenants</div> <button class="primary float-right" (click)="addTenant()">+ Add Tenant</button></div>
+        
+        
+        <div class="tenant-section" *ngFor="let tenant of currentHouse.tenants">
+
+          <div class="tenant-flex">
+            <div [ngSwitch]="tenant.status" class="tenant-status">
+              <div *ngSwitchCase="'normal'"  class="tenant-status-2 normal">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                <div class="normal text">NORMAL</div>
+              </div>
+              <div *ngSwitchCase="'due'"  class="tenant-status-2 due">
+                <ion-icon name="alarm"></ion-icon>
+                <div class="due text">DUE</div>
+              </div>
+              <div *ngSwitchCase="'overdue'"  class="tenant-status-2 overdue">
+                <ion-icon name="alert"></ion-icon>
+                <div class="overdue text">PAST DUE</div>
+              </div>
+              <div *ngSwitchCase="'unknown'"class="tenant-status-2 unknown">
+                <ion-icon name="help"></ion-icon>
+                <div class="unknown text">UNKNOWN</div>
+              </div>
+            </div>
+            <div class="tenant-right">
+              <div class="name"><ion-icon name="person"></ion-icon> {{tenant.name}}</div>
+              <div class="info"> {{tenant.employer}}</div>
+              <div class="info"><span class="rent">Rent: {{tenant.rent|currencyPipe}}</span> </div>
+              <div class="info"><span class="due-date"> (due: {{tenant.dueDate|datePipe}})</span></div>
+              <div class="info"><span class="rent">Deposit: {{tenant.deposit|currencyPipe}}</span></div>
+
+              <div class="info" *ngIf="tenant.phone"><span class="phone"><ion-icon name="call"></ion-icon>
+                <a [href]="tenant.phone|sms" target="_blank">
+                {{tenant.phone|phone}}</a>
+              </span></div>
+            </div>
+            <div class="tenant-actions">
+              <div class="flow-root">
+              
+                
+              </div>
+              <div class="flow-root">
+              
+                
+              </div>
+            </div>
+          </div>
+          <div class="action-bar">
+            <button class="float-right green small" (click)="gotoEditTenant( tenant )"> <ion-icon name="create-outline"></ion-icon> Edit Tenant</button>
+            <button class="float-right danger small" (click)="gotoPay( tenant )"><ion-icon name="logo-usd"></ion-icon> Pay</button>
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+
+    <div *ngIf="mode === 'editHouse'">
+      <form>
+        <div class="form-control">
+          <label>
+            Name
+          </label>
+          <input type="text" [(ngModel)]="editHouse.name" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="form-control">
+          <label>
+            Address
+          </label>
+          <input type="text" [(ngModel)]="editHouse.address" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="action-bar">
+          <button class="primary" (click)="submitEditHouse()">Submit</button>        
+          <button (click)="cancelHouse()">Cancel</button>
+          <button class="danger" (click)="removeHouse()">Delete</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div *ngIf="mode === 'editTenant'">
+      <form>
+        <div class="form-control">
+          <label>
+            Name
+          </label>
+          <input type="text" [(ngModel)]="editTenant.name" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="form-control">
+          <label>
+            Employer
+          </label>
+          <input type="text" [(ngModel)]="editTenant.employer" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="form-control">
+          <label>
+            Phone
+          </label>
+          <input type="tel" [(ngModel)]="editTenant.phone" maxlength="10" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="form-control">
+          <label>
+            Rent
+          </label>
+          <input type="number" min="0" [(ngModel)]="editTenant.rent" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="form-control">
+          <label>
+            Deposit
+          </label>
+          <input type="number" min="0" [(ngModel)]="editTenant.deposit" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="form-control">
+          <label>
+            Due Date
+          </label>
+          <ion-item>
+            
+            <ion-datetime type="date" [(ngModel)]="editTenant.dueDate" [ngModelOptions]="{standalone: true}"></ion-datetime>
+          </ion-item>
+        </div>
+        <div class="action-bar">
+          <button class="primary" (click)="createTenant()">Submit</button>
+          <button (click)="cancelTenant()">Cancel</button>
+          <button class="danger" (click)="removeTenant()">Delete</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="pay-modal" *ngIf="isPayModal">
+      <div class="pay-inner">
+        <button class="primary" (click)="payInFull()">Pay In Full</button>
+      </div>
+    </div>
+  </div>
+  
 </ion-content>

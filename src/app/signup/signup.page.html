@@ -1,0 +1,38 @@
+
+
+<ion-content>
+  <div class="signin-page" >
+    <form (submit)="submit()"  autocomplete="off">
+      <input autocomplete="off" name="hidden" type="text" style="display:none;">
+      <h1>Registration</h1>
+
+      <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
+
+      <div class="form-control">
+        <label>Display Name</label>
+        <input type="text" [(ngModel)]="name" [ngModelOptions]="{standalone: true}"  autocomplete="off">
+      </div>
+
+      <div class="form-control">
+        <label>Email</label>
+        <input type="text" [(ngModel)]="email" [ngModelOptions]="{standalone: true}"  autocomplete="off">
+      </div>
+      
+      <div class="form-control">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}"  autocomplete="off">
+      </div>
+
+      <div class="form-control">
+        <label>Confirm Password</label>
+        <input type="password" [(ngModel)]="confirmPassword" [ngModelOptions]="{standalone: true}"  autocomplete="off">
+      </div>
+
+
+      
+
+      <button class="primary" type="submit">Submit</button>
+      <button style="margin-left: 20px;" type="button" (click)="back()" >Back</button>
+    </form>
+  </div>
+</ion-content>

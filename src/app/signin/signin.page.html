@@ -1,0 +1,34 @@
+
+
+<ion-content >
+
+  <div class="signin-page" >
+    <form (submit)="submit()" *ngIf="!loading"  autocomplete="off">
+
+      <input autocomplete="off" name="hidden" type="text" style="display:none;">
+
+      <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
+
+      <div class="form-control">
+        <label>Email</label>
+        <input type="text" [(ngModel)]="email" [ngModelOptions]="{standalone: true}">
+      </div>
+      <div class="form-control">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
+      </div>
+
+
+      <input type="checkbox" [(ngModel)]="rememberMe" [ngModelOptions]="{standalone: true}" id="rememberMe"><label style="margin-left:5px" for="rememberMe">Remember Me</label>
+      <div class="form-control">
+        <button class="primary" type="submit">Submit</button>
+      </div>
+      
+      <span>Does not have an account?</span><a (click)="register()" class="pointer"> Create Account</a>
+
+    </form>
+    <div *ngIf="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  </div>
+</ion-content>

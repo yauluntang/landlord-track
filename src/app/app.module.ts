@@ -13,7 +13,7 @@ import { UserService } from './service/user.service';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [BrowserModule, IonicModule.forRoot({animated: false}), AppRoutingModule],
   providers: [
     StatusBar,
     UserService,

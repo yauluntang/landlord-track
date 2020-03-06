@@ -1,0 +1,237 @@
+
+
+.signin-page{
+    background-color: green;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    form{
+        background-color: white;
+        padding: 40px 100px;
+        box-shadow: 4px 4px 10px 10px rgba(0,0,0,0.1);
+        max-width: 800px;
+        min-width: 500px;
+    }
+    
+}
+
+.form-control{
+    margin: 10px 0px;
+    label{
+        display: block;
+    }    
+    input[type=text],input[type=number],input[type=date],input[type=password],input[type="tel"] {
+        width: 100%;
+    }
+}
+
+label,span,div,input{
+    color: black;
+}
+
+button {
+    padding: 15px;
+    border-radius: 5px;
+    white-space: nowrap;
+    &.primary{
+        background: #007bff;
+        color: white;
+    }
+    &.green{
+        background: green;
+        color: white;
+    }
+    &.danger{
+        background: red;
+        color: white;
+    }
+
+    &:focus {
+        outline-width: 0;
+    }
+    &.small{
+        font-size: 0.9em;
+        padding: 10px;
+    }
+}
+
+.error-message{
+    border: 1px solid red;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #ffeeee;
+}
+
+input {
+    padding: 5px 10px;
+    border: #ddd 1px solid;
+    border-radius: 5px;
+    background: #f9f9f9;
+    &:focus {
+        outline-width: 0;
+        background: white;
+    }
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.page-content{
+    background-color: lightskyblue;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 15px;
+}
+
+.house{
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    margin: 10px 0px;
+    padding: 15px;
+}
+
+.float-right{
+    float:right;
+}
+.flow-root{
+    display: flow-root;
+}
+.house-section{
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    margin: 10px 0px;
+    padding: 15px;
+    background-color: white;
+    .name{
+        font-size: 1.1em;
+        color: blue;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .address{
+
+    }
+    .tenant{
+        font-size: 0.9em;
+        color: brown;
+    }
+}
+.tenant-list{
+    .tenant-title{
+        .text{
+            font-size: 1.5em;
+        }
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .tenant-flex{
+        display: flex;
+        align-items: center;
+    
+    }
+    .tenant-status{
+        margin-right: 20px;
+
+        .tenant-status-2{
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ion-icon{
+            font-size: 5em;
+        }
+        div.text {
+            font-size: 0.9em;
+        }
+        .overdue{
+            color: red !important;
+        }
+        .due{
+            color: yellowgreen !important;
+        }
+        .normal{
+            color: green !important;
+        }
+        .unknown{
+            color: blue !important;
+        }
+    }
+    .tenant-right{
+        flex-basis: 100%;
+    }
+    .tenant-actions{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        .flow-root{
+            margin: 10px;
+        }
+    }
+    .tenant-section{
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.1);
+        margin: 10px 0px;
+        padding: 15px;
+        background-color: white;
+        .info{
+            margin-bottom: 5px;
+        }
+        .name{
+            font-size: 1.1em;
+            color: blue;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .rent{
+            color: green;
+        }
+        .due-date{
+            color: rebeccapurple;
+        }
+        .phone{
+            color: #3880ff;
+            ion-icon{
+                top: 2px;
+                position: relative;
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+.action-bar{
+    border-top: 1px solid grey;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.pay-modal{
+    position: fixed;
+    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .pay-inner{
+        width: 80%;
+        height: 60%;
+        border-radius: 30px;
+        padding: 15px;
+        min-width: 100px;
+        min-height: 100px;
+        background-color: white;
+    }
+}
