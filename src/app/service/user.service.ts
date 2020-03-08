@@ -29,6 +29,7 @@ export class Tenant {
   public deposit: number;
   public dueDate: Date;
   public phone: string;
+  public remaining: number;
 
   constructor (){
     this.name = "New Name";
@@ -37,6 +38,7 @@ export class Tenant {
     this.deposit = 0;
     this.dueDate = new Date();
     this.phone = "";
+    this.remaining = 0;
   }
 
   public copy( tenant ){
@@ -77,6 +79,7 @@ export class UserService {
   public currentTenant: any;
 
   public currentDate: any;
+  public currentDateMoment: any;
 
   constructor() { 
 
@@ -145,8 +148,9 @@ export class UserService {
 
   syncTimer(){
     setInterval(()=>{
-      this.currentDate = moment(new Date()).format("YYYY-MM-DD hh:mm");
-    },100)
+      this.currentDateMoment = moment(new Date());
+      this.currentDate = this.currentDateMoment.format("YYYY-MM-DD hh:mm:ss a");
+    },250)
   }
 
   syncHouses(){
@@ -169,21 +173,15 @@ export class UserService {
 
       res.forEach(doc => {
 
-        console.log( 'update');
 
-        let houseObject = { ...doc.data(), id: doc.id, rent:0, tenants:[] };
+        let houseObject: any = { ...doc.data(), id: doc.id, rent:0, tenants:[] };
         this.houses.push( houseObject );
         this.houseMap[ doc.id ] = houseObject;       
         let sync = doc.ref.collection('tenant').onSnapshot( (res)=> {
           houseObject.tenants.length = 0;
           res.forEach( doc =>{
             let tenantObject: any = { ...doc.data(), id: doc.id };
-
-            let rent = tenantObject.rent;
-            if ( !isNaN(rent) ){
-              houseObject.rent += rent;
-            }
-
+            tenantObject.house = houseObject.name;
             let dueMoment = null;
             if (tenantObject.dueDate){
               dueMoment = moment(tenantObject.dueDate);
@@ -204,11 +202,123 @@ export class UserService {
 
 
             houseObject.tenants.push( tenantObject );
-          })
+          });
+
+          this.calcAllTenants();
+
         });
         this.tenantSync.push( sync );
       })
     })
+  }
+
+  convertToDate( year, month, day ){
+    let date = year + '-';
+    if ( month <= 9 ){
+      date+='0'+(month+1)+"-";
+    }
+    else {
+      date+=(month+1)+"-";
+    }
+    if ( day <= 9 ){
+      date+='0'+day;
+    }
+    else {
+      date+=day;
+    }
+    return date;
+  }
+
+
+  pay( houseId, tenant, amount, note ){
+    return new Promise( ( resolve, reject ) => {
+      if ( tenant.rent > 0 ){
+
+
+        
+        let newRemaining = 0;
+        if ( tenant.remaining ){
+          newRemaining = tenant.remaining;
+        }
+        let payMonth = 0;
+        do {
+          if ( newRemaining > 0 ){
+            if ( amount >= newRemaining ){
+              amount -= newRemaining;
+              newRemaining = 0;
+              payMonth ++;
+            }
+            else {
+              newRemaining -= amount;
+              amount = 0;
+            }
+          }
+
+          if ( amount > 0 ){
+          
+            if ( amount >= tenant.rent ){
+              amount -= tenant.rent;
+              payMonth ++;
+            }
+            else {
+              newRemaining = tenant.rent - amount;
+              amount = 0;
+            }
+          }
+        }while ( amount > 0 )
+
+
+        console.log( newRemaining );
+
+        tenant.remaining = newRemaining;
+
+        let date = moment(tenant.dueDate);
+
+        let year = date.year();
+        let day = date.date();
+        let month = date.month();
+
+        console.log( "old", year, month+1, day );
+        
+        
+        month += payMonth;
+
+        if ( month > 11 ){
+          do {
+            month -= 12;
+            year++;
+          } while ( month > 11 )
+        }
+
+
+        console.log( "new", year, month+1, day );
+        
+
+
+
+        let newDate = moment( this.convertToDate( year, month, day ) );
+        tenant.dueDate = newDate.format('YYYY-MM-DD');
+
+        console.log( "new", tenant.dueDate );
+
+        tenant.payNote = note;
+
+        console.log( 'pay', tenant );
+
+        firebase.firestore().collection('houses').doc( houseId ).collection('tenant').doc(tenant.id).update( {..._.omit(tenant, 'id')} ).then( () =>{
+          resolve();
+        }).catch(e=>{
+          console.error(e);
+          reject(e);
+        });
+
+      }
+    });
+  }
+
+
+  calcAllTenants(){
+
   }
 
   /*

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Tab1Page } from './tab1.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 import { CommonAppModule } from '../service/common.module';
+import { StatusComponent } from './status';
 
 
 @NgModule({

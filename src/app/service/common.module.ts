@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
-import { DatePipe, CurrencyPipe, PhonePipe, SmsPipe } from './datepipe.pipe';
+import { DatePipe, CurrencyPipe, PhonePipe, SmsPipe, SafeUrlPipe, DueSortPipe, TotalRentPipe } from './datepipe.pipe';
 
 
 @NgModule({
   providers: [],
-  declarations: [DatePipe, CurrencyPipe, PhonePipe, SmsPipe],
-  exports:[DatePipe, CurrencyPipe, PhonePipe, SmsPipe]
+  declarations: [DatePipe, CurrencyPipe, PhonePipe, SmsPipe, SafeUrlPipe, DueSortPipe, TotalRentPipe],
+  exports:[DatePipe, CurrencyPipe, PhonePipe, SmsPipe, SafeUrlPipe, DueSortPipe, TotalRentPipe]
 })
 export class CommonAppModule {}

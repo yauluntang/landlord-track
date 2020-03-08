@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService, Tenant, House } from '../service/user.service';
 import { NavController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
+import moment from "moment-timezone";
 
 @Component({
   selector: 'app-tab1',
@@ -16,8 +17,13 @@ export class Tab1Page {
   public editTenant: any;
 
   public payTenant: any;
-
+  public payNote: any;
+  public moment: any;
   public isPayModal: boolean;
+  public refreshing: boolean;
+  
+
+  public payAmount; any;
 
   //public houseEditMode: boolean;
 
@@ -28,13 +34,18 @@ export class Tab1Page {
     private navCtrl: NavController,
     private route: ActivatedRoute,
     ) {
-
+      this.moment = moment;
+      this.refreshing = false;
     }
 
 
   gotoCreateHouse(){
     this.mode = "editHouse";
     this.editHouse = new House();
+  }
+
+  back(){
+    this.navCtrl.navigateForward( `tabs/tab1`);
   }
 
 
@@ -84,20 +95,46 @@ export class Tab1Page {
     });
   }
 
-  payInFull(){
-    
+  refresh(){
+    this.refreshing = true;
+    setTimeout( ()=>{this.refreshing = false},100);
+  }
+
+  payInFull(  ){
+    this.userService.pay( this.currentHouseId, this.payTenant, this.payAmount, this.payNote ).then( res=>{
+      this.isPayModal = false;
+      this.refresh();
+    });
+  }
+
+  closePay(){
+    this.isPayModal = false;
   }
 
   gotoPay( tenant ){
     this.isPayModal = true;
-    this.payTenant = tenant;
+   
+    if ( tenant.remaining ){
+      this.payAmount = tenant.remaining;
+    }
+    else {
+      this.payAmount = tenant.rent;
+    }
+    this.payNote = "";
+    this.payTenant = new Tenant();
+    this.payTenant.copy(tenant);
   }
 
 
 
   cancelHouse(){
     this.editHouse = null;
-    this.mode = "showHouse";
+    if ( this.currentHouseId ){
+      this.mode = "showHouse";
+    }
+    else {
+      this.mode = "listHouses";
+    }
   }
 
   cancelTenant(){

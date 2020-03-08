@@ -39,6 +39,10 @@ button {
         background: #007bff;
         color: white;
     }
+    &.secondary{
+        background: #ddd;
+        color: black;
+    }
     &.green{
         background: green;
         color: white;
@@ -195,6 +199,9 @@ input {
         }
         .due-date{
             color: rebeccapurple;
+        }
+        .remaining {
+            color: red;
         }
         .phone{
             color: #3880ff;
